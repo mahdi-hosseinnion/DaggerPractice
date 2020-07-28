@@ -21,7 +21,7 @@ public class SessionManager  {
     public SessionManager() {
     }
 
-    private void  authenticationWithId(final LiveData<AuthResource<User>> source){
+    public void  authenticationWithId(final LiveData<AuthResource<User>> source){
         if (cachedUser!=null){
             cachedUser.setValue(AuthResource.loading((User)null));
             cachedUser.addSource(source, new Observer<AuthResource<User>>() {
@@ -33,7 +33,7 @@ public class SessionManager  {
             });
         }
     }
-    private void logOut(){
+    public void logOut(){
         Log.d(TAG, "logOut: User logout ...");
         cachedUser.setValue(AuthResource.<User>logout());
 
