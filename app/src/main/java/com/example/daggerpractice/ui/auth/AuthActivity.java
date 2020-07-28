@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.RequestManager;
 import com.example.daggerpractice.R;
@@ -25,6 +27,7 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     private static final String TAG = "AuthActivity";
     //ui component
     EditText edt_userId;
+    ProgressBar progress_bar;
     //vars
     private AuthViewModel viewModel;
     @Inject
@@ -33,34 +36,63 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     RequestManager glideInstance;
     @Inject
     Drawable logo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth);
-        edt_userId=findViewById(R.id.user_id_input);
+        edt_userId = findViewById(R.id.user_id_input);
+        progress_bar = findViewById(R.id.progress_bar);
         findViewById(R.id.login_button).setOnClickListener(this);
-        viewModel= new ViewModelProvider(this,providerFactory).get(AuthViewModel.class);
+        viewModel = new ViewModelProvider(this, providerFactory).get(AuthViewModel.class);
         setLogo();
         subscribeToObservers();
     }
-    private void subscribeToObservers(){
-        viewModel.observerUser().observe(this, new Observer<User>() {
+
+    private void subscribeToObservers() {
+        viewModel.observerUser().observe(this, new Observer<AuthResource<User>>() {
             @Override
-            public void onChanged(User user) {
-                if (user!=null){
-                    Log.d(TAG, "onChanged: "+user.toString());
+            public void onChanged(AuthResource<User> userAuthResource) {
+                if (userAuthResource != null) {
+                    switch (userAuthResource.status) {
+                        case LOADING: {
+                            showProgressBar(true);
+                            break;
+                        }
+                        case AUTHENTICATED: {
+                            showProgressBar(false);
+                            Log.d(TAG, "onChanged: LOGIN SUCCESS email: "+userAuthResource.data.getEmail());
+                            break;
+                        }
+                        case ERROR: {
+                            showProgressBar(false);
+                            Toast.makeText(AuthActivity.this, userAuthResource.message+
+                                    "\n Did you enter a number between 1 and 10 ?", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        case NOT_AUTHENTICATED: {
+                            showProgressBar(false);
+                            break;
+                        }
+                    }
                 }
             }
         });
     }
-    private void setLogo(){
+    private void showProgressBar(boolean isVisible){
+        if (isVisible)
+            progress_bar.setVisibility(View.VISIBLE);
+        else
+            progress_bar.setVisibility(View.GONE);
+    }
+    private void setLogo() {
         glideInstance.load(logo)
-                .into((ImageView)findViewById(R.id.login_logo));
+                .into((ImageView) findViewById(R.id.login_logo));
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.login_button:
                 attemptLogin();
                 break;
@@ -68,7 +100,7 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     }
 
     private void attemptLogin() {
-        if (TextUtils.isEmpty(edt_userId.getText().toString())){
+        if (TextUtils.isEmpty(edt_userId.getText().toString())) {
             return;
         }
         viewModel.authenticateWithUser(Integer.parseInt(edt_userId.getText().toString()));
