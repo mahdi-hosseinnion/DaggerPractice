@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.daggerpractice.di.DaggerAppComponent;
 import com.example.daggerpractice.models.User;
 import com.example.daggerpractice.ui.auth.AuthActivity;
 import com.example.daggerpractice.ui.auth.AuthResource;

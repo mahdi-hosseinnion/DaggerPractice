@@ -1,6 +1,8 @@
 package com.example.daggerpractice.di.main;
 
 import com.example.daggerpractice.di.ViewModelKey;
+import com.example.daggerpractice.ui.main.posts.PostsFragment;
+import com.example.daggerpractice.ui.main.posts.PostsViewModel;
 import com.example.daggerpractice.ui.main.profile.ProfileViewModel;
 
 import androidx.lifecycle.ViewModel;
@@ -14,4 +16,8 @@ public abstract class MainViewModelsModule {
     @IntoMap
     @ViewModelKey(ProfileViewModel.class)
     public abstract ViewModel bindProfileViewModel(ProfileViewModel profileViewModel);
+    @Binds
+    @IntoMap
+    @ViewModelKey(PostsViewModel.class)
+    public abstract ViewModel bindPostsViewModel(PostsViewModel PostsViewModel);
 }
