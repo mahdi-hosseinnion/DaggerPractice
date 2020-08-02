@@ -64,7 +64,7 @@ public class PostsFragment extends DaggerFragment {
                 if (listResource != null) {
                     switch (listResource.status) {
                         case SUCCESS: {
-                            Log.d(TAG, "onChanged: data == "+listResource.data);
+                            Log.d(TAG, "onChanged: data == " + listResource.data);
                             recyclerAdapter.setPosts(listResource.data);
                             break;
                         }
@@ -81,9 +81,10 @@ public class PostsFragment extends DaggerFragment {
             }
         });
     }
-    private void initRecycler(){
+
+    private void initRecycler() {
         recyclerView.setAdapter(recyclerAdapter);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.addItemDecoration(verticalSpacingDecorator);
     }
 }
