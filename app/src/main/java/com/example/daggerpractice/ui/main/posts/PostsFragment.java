@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.example.daggerpractice.R;
 import com.example.daggerpractice.models.Post;
 import com.example.daggerpractice.ui.main.Resource;
+import com.example.daggerpractice.util.VerticalSpacingDecorator;
 import com.example.daggerpractice.viewmodels.ViewModelProviderFactory;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import dagger.android.support.DaggerFragment;
 
@@ -32,6 +34,12 @@ public class PostsFragment extends DaggerFragment {
     private PostsViewModel viewModel;
     @Inject
     ViewModelProviderFactory providerFactory;
+    @Inject
+    PostRecyclerAdapter recyclerAdapter;
+    @Inject
+    VerticalSpacingDecorator verticalSpacingDecorator;
+    @Inject
+    LinearLayoutManager linearLayoutManager;
 
     @Nullable
     @Override
@@ -44,6 +52,7 @@ public class PostsFragment extends DaggerFragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         viewModel = new ViewModelProvider(this, providerFactory).get(PostsViewModel.class);
         Toast.makeText(getActivity(), "POSTS FRAGMENT", Toast.LENGTH_SHORT).show();
+        initRecycler();
         subscribeObservers();
     }
 
@@ -55,10 +64,8 @@ public class PostsFragment extends DaggerFragment {
                 if (listResource != null) {
                     switch (listResource.status) {
                         case SUCCESS: {
-                            Log.d(TAG, "onChanged: there is "+listResource.data.size()+" post for this user ....");
-                            for (Post post : listResource.data) {
-                                Log.d(TAG, "onChanged: " + post.getTitle());
-                            }
+                            Log.d(TAG, "onChanged: data == "+listResource.data);
+                            recyclerAdapter.setPosts(listResource.data);
                             break;
                         }
                         case LOADING: {
@@ -73,5 +80,10 @@ public class PostsFragment extends DaggerFragment {
                 }
             }
         });
+    }
+    private void initRecycler(){
+        recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(verticalSpacingDecorator);
     }
 }
