@@ -7,8 +7,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.daggerpractice.R;
+import com.example.daggerpractice.models.User;
 import com.example.daggerpractice.util.Constants;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import androidx.core.content.ContextCompat;
@@ -48,5 +50,10 @@ public class AppModule {
         return ContextCompat.getDrawable(application,R.drawable.logo);
     }
 
-
+    @Singleton
+    @Provides
+    @Named("app_user")
+    static User provideUser(){
+        return new User();
+    }
 }

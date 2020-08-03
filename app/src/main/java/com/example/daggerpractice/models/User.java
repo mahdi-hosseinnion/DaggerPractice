@@ -62,13 +62,13 @@ public class User {
         this.website = website;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", userName='" + userName + '\'' +
-                ", email='" + email + '\'' +
-                ", website='" + website + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "User{" +
+//                "id=" + id +
+//                ", userName='" + userName + '\'' +
+//                ", email='" + email + '\'' +
+//                ", website='" + website + '\'' +
+//                '}';
+//    }
 }

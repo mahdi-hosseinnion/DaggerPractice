@@ -24,6 +24,7 @@ import com.example.daggerpractice.ui.main.MainActivity;
 import com.example.daggerpractice.viewmodels.ViewModelProviderFactory;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 public class AuthActivity extends DaggerAppCompatActivity implements View.OnClickListener {
     private static final String TAG = "AuthActivity";
@@ -38,6 +39,13 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
     RequestManager glideInstance;
     @Inject
     Drawable logo;
+    @Inject
+    @Named("app_user")
+    User user1;
+
+    @Inject
+    @Named("auth_user")
+    User user2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +57,8 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
         viewModel = new ViewModelProvider(this, providerFactory).get(AuthViewModel.class);
         setLogo();
         subscribeToObservers();
+        Log.d(TAG, "onCreate: 1: " + user1);
+        Log.d(TAG, "onCreate: 2: " + user2);
     }
 
     private void subscribeToObservers() {
@@ -63,13 +73,13 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
                         }
                         case AUTHENTICATED: {
                             showProgressBar(false);
-                            Log.d(TAG, "onChanged: LOGIN SUCCESS email: "+userAuthResource.data.getEmail());
+                            Log.d(TAG, "onChanged: LOGIN SUCCESS email: " + userAuthResource.data.getEmail());
                             onLoginSuccess();
                             break;
                         }
                         case ERROR: {
                             showProgressBar(false);
-                            Toast.makeText(AuthActivity.this, userAuthResource.message+
+                            Toast.makeText(AuthActivity.this, userAuthResource.message +
                                     "\n Did you enter a number between 1 and 10 ?", Toast.LENGTH_SHORT).show();
                             break;
                         }
@@ -88,12 +98,13 @@ public class AuthActivity extends DaggerAppCompatActivity implements View.OnClic
         finish();
     }
 
-    private void showProgressBar(boolean isVisible){
+    private void showProgressBar(boolean isVisible) {
         if (isVisible)
             progress_bar.setVisibility(View.VISIBLE);
         else
             progress_bar.setVisibility(View.GONE);
     }
+
     private void setLogo() {
         glideInstance.load(logo)
                 .into((ImageView) findViewById(R.id.login_logo));
