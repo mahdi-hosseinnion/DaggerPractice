@@ -13,18 +13,25 @@ import retrofit2.Retrofit;
 
 @Module
 public class MainModule {
+    @MainScope
     @Provides
     static MainApi providesMainApi(Retrofit retrofit){
         return retrofit.create(MainApi.class);
     }
+
+    @MainScope
     @Provides
     static PostRecyclerAdapter providesPostRecyclerAdapter(){
         return new PostRecyclerAdapter();
     }
+
+    @MainScope
     @Provides
     static VerticalSpacingDecorator providesVerticalSpacingDecorator(){
         return new VerticalSpacingDecorator(15);
     }
+
+    @MainScope
     @Provides
     static LinearLayoutManager providesLinearLayoutManager(Application application){
         return new LinearLayoutManager(application);
